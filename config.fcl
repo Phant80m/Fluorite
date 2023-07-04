@@ -1,0 +1,5 @@
+// fcl (fluorite config language)
+
+public_shame = true
+dm_warning = false
+do_logs = true

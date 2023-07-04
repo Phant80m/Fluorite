@@ -13,18 +13,22 @@ use std::io::Write;
 struct Config {
     public_shame: bool,
     dm_warning: bool,
+    do_logs: bool,
 }
 impl Config {
     fn construct() -> Config {
-        let config_file = fs::read_to_string("./config").expect("Failed to read config file.");
+        let config_file = fs::read_to_string("./config.fcl").expect("Failed to read config file.");
         //
         let public_shame =
-            parse_boolean_value(&config_file, "#public_shame_true", "#public_shame_false");
-        let dm_warning = parse_boolean_value(&config_file, "#dm_warning_true", "#dm_warning_false");
+            parse_boolean_value(&config_file, "public_shame = true", "public_shame = false");
+        let dm_warning =
+            parse_boolean_value(&config_file, "dm_warning = true", "dm_warning = false");
+        let do_logs = parse_boolean_value(&config_file, "do_logs = true", "do_logs = false");
         //
         return Config {
             public_shame,
             dm_warning,
+            do_logs,
         };
     }
 }
@@ -100,42 +104,47 @@ pub async fn language(ctx: &Context, msg: &Message) {
             .expect("Failed to open log file");
 
         // let time_string = local_time.format("%I:%M:%S %p").to_string();
-        if let Some(guild_id) = msg.guild_id {
-            match guild_id.member(ctx.http(), msg.author.id).await {
-                Ok(member) => {
-                    println!(
-                        "[ {} ]: {} -> {}",
-                        time_now().bold().yellow(),
-                        member.display_name().to_string().bold().red(),
-                        &msg.content.to_string().bold().white()
-                    );
-                    writeln!(
-                        &mut log_file,
-                        "[ {} ]: {} -> {}",
-                        time_now(),
-                        member.display_name().to_string(),
-                        &msg.content.to_string()
-                    )
-                    .expect("Failed to write to log file");
-                }
-                Err(e) => {
-                    eprintln!("{}", e);
+        if cfg.do_logs {
+            if let Some(guild_id) = msg.guild_id {
+                match guild_id.member(ctx.http(), msg.author.id).await {
+                    Ok(member) => {
+                        println!(
+                            "[ {} ]: {} -> {}",
+                            time_now().bold().yellow(),
+                            member.display_name().to_string().bold().red(),
+                            &msg.content.to_string().bold().white()
+                        );
+                        writeln!(
+                            &mut log_file,
+                            "[ {} ]: {} -> {}",
+                            time_now(),
+                            member.display_name().to_string(),
+                            &msg.content.to_string()
+                        )
+                        .expect("Failed to write to log file");
+                    }
+                    Err(e) => {
+                        eprintln!("{}", e);
+                    }
                 }
             }
         }
-        if let Err(why) = ChannelId::new(1125358725423706112)
-            .send_message(
-                &ctx.http,
-                CreateMessage::new().embed(
-                    CreateEmbed::new()
-                        .title(format!("Language alert:"))
-                        .description(format!("{} said: {}", &msg.author, &msg.content))
-                        .timestamp(Timestamp::now()),
-                ),
-            )
-            .await
-        {
-            println!("Error sending message: {:?}", why);
+        // put your channel ID here
+        if cfg.do_logs {
+            if let Err(why) = ChannelId::new(1125358725423706112)
+                .send_message(
+                    &ctx.http,
+                    CreateMessage::new().embed(
+                        CreateEmbed::new()
+                            .title(format!("Language alert:"))
+                            .description(format!("{} said: {}", &msg.author, &msg.content))
+                            .timestamp(Timestamp::now()),
+                    ),
+                )
+                .await
+            {
+                println!("Error sending message: {:?}", why);
+            }
         }
         if msg.author.id.to_string() == "744784263932674079" {
             // makes riot evr4 exempt to mutes for testing purposes
