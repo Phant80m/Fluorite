@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set your Discord token
-export DISCORD_TOKEN="MTExNjg4NjE4NzQ5MjI0NTU4NQ.GXIkDW.yiqQfYGQ_fBr2WG6hAFQiLLqhTY68Q854pY03E"
+export DISCORD_TOKEN="Enter your bots token here"
 
 cargo build --release
 clear
