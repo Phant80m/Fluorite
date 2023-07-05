@@ -3,6 +3,7 @@ use std::fs;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+// config and keyword related objects
 pub fn get_keywords() -> Vec<String> {
     let file = File::open("./keywords").expect("error at get_keywords");
     let reader = BufReader::new(file);
@@ -25,11 +26,6 @@ impl Config {
         let dm_warning = config_gen(&config_file, "dm_warning = true", "dm_warning = false");
         let do_logs = config_gen(&config_file, "do_logs = true", "do_logs = false");
         let do_mutes = config_gen(&config_file, "do_mutes = true", "do_mutes = false");
-
-        // Check valid config
-        if let Err(e) = check_for_guild() {
-            println!("error at {:?}", e);
-        }
 
         // Read logging_channel value
         let logging_channel = extract_config_value(&config_file, "logging_channel")
@@ -80,12 +76,8 @@ pub fn check_for_guild() -> std::io::Result<()> {
         );
         std::process::exit(0);
     }
-
     let file_content = fs::read_to_string("./config.fcl")?;
-
-    let channel_id = "<channelID here>";
-
-    if file_content.contains(channel_id) {
+    if file_content.contains("<channelID here>") {
         println!(
             "{}",
             "[ core ]: You need to set the channel ID for logging!"

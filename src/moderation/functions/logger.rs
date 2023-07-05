@@ -18,7 +18,6 @@ pub async fn enable(msg: &Message, ctx: &Context, cfg: &Config) {
         .open("./logs.txt")
         .expect("Failed to open log file");
 
-    // let time_string = local_time.format("%I:%M:%S %p").to_string();
     if cfg.do_logs {
         if let Some(guild_id) = msg.guild_id {
             match guild_id.member(ctx.http(), msg.author.id).await {
