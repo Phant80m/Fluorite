@@ -1,4 +1,5 @@
-use crate::moderation::automod::{time_now, Config};
+use crate::moderation::automod::time_now;
+use fluorite::Config;
 
 use owo_colors::OwoColorize;
 use serenity::all::ChannelId;
@@ -45,7 +46,7 @@ pub async fn enable(msg: &Message, ctx: &Context, cfg: &Config) {
     }
     // put your channel ID here
     if cfg.do_logs {
-        if let Err(why) = ChannelId::new(1125358725423706112)
+        if let Err(why) = ChannelId::new(cfg.logging_channel.unwrap_or_default())
             .send_message(
                 &ctx.http,
                 CreateMessage::new().embed(

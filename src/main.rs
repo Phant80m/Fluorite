@@ -1,8 +1,12 @@
 mod commands;
 mod moderation;
-
+use fluorite::check_for_guild;
+use owo_colors::OwoColorize;
 use serenity::all::OnlineStatus;
 use serenity::async_trait;
+use std::fs::File;
+use std::io::{self, Write};
+use tokio::fs;
 
 use serenity::builder::{CreateInteractionResponse, CreateInteractionResponseMessage};
 
@@ -22,6 +26,13 @@ impl EventHandler for Handler {
         moderation::automod::init(&ctx, &msg).await;
     }
     async fn ready(&self, ctx: Context, ready: Ready) {
+        //
+        if let Err(e) = check_for_config().await {
+            println!("Error {:?}", e);
+        }
+        if let Err(e) = check_for_guild() {
+            println!("{:?}", e);
+        }
         //
         println!("{} is connected!", ready.user.name);
         let _guild_command =
@@ -65,4 +76,41 @@ async fn main() {
     if let Err(why) = client.start().await {
         println!("Client error: {:?}", why);
     }
+}
+async fn check_for_config() -> io::Result<()> {
+    if let Err(_) = fs::metadata("./config.fcl").await {
+        println!(
+            "{}",
+            "[ core ]: Config file not found creating one for you at ./config.fcl ..."
+                .bold()
+                .green()
+        );
+        let path = "./config.fcl";
+        let mut output = File::create(path)?;
+
+        let config = r#"
+// fluorite config
+
+public_shame = true
+dm_warning = true
+do_logs = true
+do_mutes = true
+
+logging_channel = <channelID here>
+"#;
+
+        write!(output, "{}", config)?;
+        println!(
+            "{}",
+            "[ Core ]: Config file should be created!".bold().yellow()
+        );
+        println!(
+            "{}",
+            "[ Core ]: Make sure to edit the 'logging_channel' in the config.fcl"
+                .bold()
+                .red()
+        );
+        std::process::exit(0);
+    }
+    Ok(())
 }

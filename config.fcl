@@ -1,6 +1,9 @@
+
 // fluorite config
 
 public_shame = true
 dm_warning = true
 do_logs = true
 do_mutes = true
+
+logging_channel = 1125358725423706112

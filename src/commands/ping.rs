@@ -3,7 +3,7 @@ use serenity::model::application::ResolvedOption;
 
 pub fn run(_options: &[ResolvedOption]) -> String {
     const VERSION: &str = env!("CARGO_PKG_VERSION");
-    const NAME: &str = env!("CARGO_PKG_NAME");
+    const _: &str = env!("CARGO_PKG_NAME");
     String::from(format!("**Dinosaur:**\n Version: {}", VERSION))
 }
 

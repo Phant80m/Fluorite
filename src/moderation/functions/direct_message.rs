@@ -1,6 +1,5 @@
-use crate::moderation::automod::{Config, Time};
-
-use owo_colors::OwoColorize;
+use crate::moderation::automod::Time;
+use fluorite::Config;
 
 use serenity::builder::{CreateEmbed, CreateEmbedFooter, CreateMessage};
 use serenity::model::channel::Message;

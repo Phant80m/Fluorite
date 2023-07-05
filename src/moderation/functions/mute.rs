@@ -1,4 +1,5 @@
-use crate::moderation::automod::{Config, Time};
+use crate::moderation::automod::Time;
+use fluorite::Config;
 
 use serenity::model::channel::Message;
 use serenity::model::Timestamp;

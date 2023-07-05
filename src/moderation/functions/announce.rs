@@ -1,4 +1,4 @@
-use crate::moderation::automod::Config;
+use fluorite::Config;
 
 use serenity::builder::{CreateEmbed, CreateMessage};
 use serenity::model::channel::Message;
