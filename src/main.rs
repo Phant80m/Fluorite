@@ -5,7 +5,7 @@ use serenity::all::OnlineStatus;
 use serenity::async_trait;
 
 use serenity::builder::{CreateInteractionResponse, CreateInteractionResponseMessage};
-use serenity::cache::Cache;
+
 use serenity::gateway::ActivityData;
 use serenity::model::application::{Command, Interaction};
 use serenity::model::channel::Message;
@@ -19,17 +19,14 @@ struct Handler;
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
-        moderation::moderation::language(&ctx, &msg).await;
+        moderation::automod::init(&ctx, &msg).await;
     }
     async fn ready(&self, ctx: Context, ready: Ready) {
         //
         println!("{} is connected!", ready.user.name);
         let _guild_command =
             Command::create_global_command(&ctx.http, commands::ping::register()).await;
-        ctx.set_presence(
-            Some(ActivityData::competing("Against users.")),
-            OnlineStatus::Online,
-        );
+        ctx.set_presence(Some(ActivityData::listening("/ping")), OnlineStatus::Online);
     }
 
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {

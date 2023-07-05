@@ -204,16 +204,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "discord"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "owo-colors",
- "serenity",
- "tokio",
-]
-
-[[package]]
 name = "encoding_rs"
 version = "0.8.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -230,6 +220,16 @@ checksum = "3b9429470923de8e8cbd4d2dc513535400b4b3fef0319fb5c4e1f520a7bef743"
 dependencies = [
  "crc32fast",
  "miniz_oxide",
+]
+
+[[package]]
+name = "fluorite"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "owo-colors",
+ "serenity",
+ "tokio",
 ]
 
 [[package]]

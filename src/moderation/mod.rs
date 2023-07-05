@@ -1,1 +1,2 @@
-pub mod moderation;
+pub mod automod;
+pub mod functions;
