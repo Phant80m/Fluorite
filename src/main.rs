@@ -1,9 +1,12 @@
 mod commands;
 mod moderation;
 
+use serenity::all::OnlineStatus;
 use serenity::async_trait;
 
 use serenity::builder::{CreateInteractionResponse, CreateInteractionResponseMessage};
+use serenity::cache::Cache;
+use serenity::gateway::ActivityData;
 use serenity::model::application::{Command, Interaction};
 use serenity::model::channel::Message;
 use serenity::model::gateway::Ready;
@@ -19,10 +22,14 @@ impl EventHandler for Handler {
         moderation::moderation::language(&ctx, &msg).await;
     }
     async fn ready(&self, ctx: Context, ready: Ready) {
+        //
         println!("{} is connected!", ready.user.name);
-
         let _guild_command =
             Command::create_global_command(&ctx.http, commands::ping::register()).await;
+        ctx.set_presence(
+            Some(ActivityData::competing("Against users.")),
+            OnlineStatus::Online,
+        );
     }
 
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {

@@ -17,6 +17,7 @@ struct Config {
 }
 impl Config {
     fn construct() -> Config {
+        // fluorite config language very simple true or false bool orientatied language.
         let config_file = fs::read_to_string("./config.fcl").expect("Failed to read config file.");
         //
         let public_shame =
