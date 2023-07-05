@@ -25,5 +25,5 @@ jobs:
     - name: Upload binary artifact
       uses: actions/upload-artifact@v3.1.1
       with:
-        name: fluorite_aarch64_unknown_linux
+        name: fluorite_aarch64_unknown_linux.zip
         path: target/release/fluorite
