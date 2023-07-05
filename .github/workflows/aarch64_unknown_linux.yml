@@ -1,4 +1,4 @@
-name: ARM CPU compiler
+name: aarch64 fluorite
 
 on:
   push:

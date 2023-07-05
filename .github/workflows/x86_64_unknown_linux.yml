@@ -1,4 +1,4 @@
-name: Linux Compiler
+name: x86_64 fluorite
 
 on:
   push:
