@@ -1,16 +1,16 @@
 mod commands;
 mod moderation;
 use fluorite::check_for_guild;
-use poise::serenity_prelude;
 use owo_colors::OwoColorize;
-use serenity::all::OnlineStatus;
-use serenity::async_trait;
+use poise::serenity_prelude::{self as serenity, UserId};
+use serenity::GatewayIntents;
+// use serenity::all::OnlineStatus;
+// use serenity::async_trait;
 use std::fs::File;
 use std::io::{self, Write};
 use tokio::fs;
 
 use serenity::builder::{CreateInteractionResponse, CreateInteractionResponseMessage};
-
 use serenity::gateway::ActivityData;
 use serenity::model::application::{Command, Interaction};
 use serenity::model::channel::Message;
@@ -18,20 +18,23 @@ use serenity::model::gateway::Ready;
 
 use serenity::prelude::*;
 use std::env;
+
 struct Data {} // User data, which is stored and accessible in all command invocations
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type ContextPoise<'a> = poise::Context<'a, Data, Error>;
-struct Handler;
-
+#[poise::command(slash_command, prefix_command)]
 async fn age(
     ctx: ContextPoise<'_>,
-    #[description = "Selected user"] user: Option<serenity::User>,
+    #[description = "Selected user"] user: Option<serenity::all::User>,
 ) -> Result<(), Error> {
     let u = user.as_ref().unwrap_or_else(|| ctx.author());
     let response = format!("{}'s account was created at {}", u.name, u.created_at());
     ctx.say(response).await?;
     Ok(())
 }
+
+struct Handler;
+
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
@@ -75,12 +78,10 @@ impl EventHandler for Handler {
 
 #[tokio::main]
 async fn main() {
-    let framework = poise::Framework::builder()
-        .options(poise::FrameworkOptions {
-            commands: vec![age()],
-            ..Default::default()
-        })
-
+    let framework = poise::Framework::builder().options(poise::FrameworkOptions {
+        commands: vec![age()],
+        ..Default::default()
+    });
     let token = env::var("DISCORD_TOKEN").expect("Expected a token in the environment");
     let intents = GatewayIntents::GUILD_MESSAGES
         | GatewayIntents::DIRECT_MESSAGES
