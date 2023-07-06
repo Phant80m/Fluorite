@@ -1,7 +1,12 @@
+use chrono::Local;
 use owo_colors::OwoColorize;
 use std::fs;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+pub fn time_now() -> String {
+    let local_time = Local::now();
+    return local_time.format("%Y-%m-%d :: %I:%M:%S %p").to_string();
+}
 
 pub fn keywords() -> Vec<String> {
     let file = File::open("./keywords").expect("error at get_keywords");

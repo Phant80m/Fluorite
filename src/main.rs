@@ -10,8 +10,8 @@ struct Handler;
 
 #[serenity::async_trait]
 impl serenity::EventHandler for Handler {
-    async fn message(&self, ctx: SerenityContext, msg: Message, pctx: &Context) {
-        moderation::automod::init(&ctx, &msg, &pctx).await
+    async fn message(&self, ctx: SerenityContext, msg: Message) {
+        moderation::automod::init(&ctx, &msg).await
     }
     async fn ready(&self, ctx: SerenityContext, ready: Ready) {
         println!("{} is connected", ready.user.name);
